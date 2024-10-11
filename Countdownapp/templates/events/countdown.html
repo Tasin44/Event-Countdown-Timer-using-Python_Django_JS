@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% block scripts %}
+  <script src="{% static 'main.js' %}" defer></script>
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const eventDate = new Date("{{ object.date|date:'Y-m-d H:i:s' }}").getTime(); // Event date in milliseconds
+
+          // Function to update the countdown timer
+          function updateTimer() {
+              const now = new Date().getTime();  // Get the current time
+              const timeRemaining = eventDate - now; // Calculate time difference
+
+              if (timeRemaining > 0) {
+                  const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                  const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                  const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                  const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                  // Display the countdown
+                  document.getElementById('countdown-box').textContent = `${days} days : ${hours} hrs : ${minutes} mins : ${seconds} secs`;
+              } else {
+                  document.getElementById('countdown-box').textContent = "Countdown Completed";
+              }
+          }
+
+          // Update the timer every second
+          setInterval(updateTimer, 1000);
+      });
+  </script>
+{% endblock scripts %}
+
+{% block content %}
+  <div class="row">
+     <div class="col-5">
+         <div>{{ object.name }}:</div>
+     <div class="col-7">
+         <div id="event-box">Will take place: {{ object.date|date:"M d, Y H:i:s" }}</div>
+     </div>
+  </div>
+ <div>Time left:</div>
+ <div id="countdown-box" class="text-center mt-3 h1">
+    <div class="spinner-border" role="status"></div>
+</div>
+{% endblock content %}
